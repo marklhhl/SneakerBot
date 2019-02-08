@@ -4,12 +4,13 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
+import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class Connection {
 
 	  public static void main(String[] args) throws Exception {
 
-		String url = "https://www.adidas.ca/en";
+		String url = "https://www.adidas.ca/en/continental-80-shoes/G27706.html";
 		String cartUrl = "https://www.adidas.ca/api/cart_items?sitePath=en";
 
 		Connection http = new Connection();
@@ -81,7 +82,19 @@ public class Connection {
 		prod.put("displaySize", "9");
 		prod.put("captchaResponse", "");
 		
-		System.out.println(prod.toString());
+		SecureRandom csprng = new SecureRandom();
+		byte[] randomBytes1 = new byte[4];
+		csprng.nextBytes(randomBytes1);
+		byte[] randomBytes2 = new byte[4];
+		csprng.nextBytes(randomBytes2);
+		BigInteger r1 = new BigInteger(randomBytes1).abs();
+		BigInteger r2 = new BigInteger(randomBytes2).abs();
+		String result = r1.toString(16) + r2.toString(16);
+		
+		conn.setRequestProperty("X-INSTANA-T", result);
+		conn.setRequestProperty("X-INSTANA-S", result);
+		conn.setRequestProperty("X-INSTANA-L", "1");  
+		System.out.println(result);
 		conn.setRequestProperty("Content-Length", String.valueOf(prod.toString().length()));
 		// Send post request
 		DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
@@ -92,7 +105,6 @@ public class Connection {
 		int responseCode = conn.getResponseCode();
 		System.out.println("\nSending 'POST' request to URL : " + url);
 		System.out.println("Response Code : " + responseCode);
-
 		BufferedReader in = 
 	             new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		String inputLine;
@@ -154,4 +166,6 @@ public class Connection {
 	  public void setCookies(List<String> cookies) {
 		this.cookies = cookies;
 	  }
+	  
+	  
 }
