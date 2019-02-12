@@ -82,19 +82,19 @@ public class Connection {
 		prod.put("displaySize", "9");
 		prod.put("captchaResponse", "");
 		
-		SecureRandom csprng = new SecureRandom();
-		byte[] randomBytes1 = new byte[4];
-		csprng.nextBytes(randomBytes1);
-		byte[] randomBytes2 = new byte[4];
-		csprng.nextBytes(randomBytes2);
-		BigInteger r1 = new BigInteger(randomBytes1).abs();
-		BigInteger r2 = new BigInteger(randomBytes2).abs();
-		String result = r1.toString(16) + r2.toString(16);
-		
-		conn.setRequestProperty("X-INSTANA-T", result);
-		conn.setRequestProperty("X-INSTANA-S", result);
-		conn.setRequestProperty("X-INSTANA-L", "1");  
-		System.out.println(result);
+//		SecureRandom csprng = new SecureRandom();
+//		byte[] randomBytes1 = new byte[4];
+//		csprng.nextBytes(randomBytes1);
+//		byte[] randomBytes2 = new byte[4];
+//		csprng.nextBytes(randomBytes2);
+//		BigInteger r1 = new BigInteger(randomBytes1).abs();
+//		BigInteger r2 = new BigInteger(randomBytes2).abs();
+//		String result = r1.toString(16) + r2.toString(16);
+//		
+//		conn.setRequestProperty("X-INSTANA-T", result);
+//		conn.setRequestProperty("X-INSTANA-S", result);
+//		conn.setRequestProperty("X-INSTANA-L", "1");  
+//		System.out.println(result);
 		conn.setRequestProperty("Content-Length", String.valueOf(prod.toString().length()));
 		// Send post request
 		DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
